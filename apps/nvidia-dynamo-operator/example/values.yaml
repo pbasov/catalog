@@ -1,0 +1,9 @@
+dynamo-platform:
+  # The outer key targets the example chart's dependency (the catalog wrapper);
+  # the inner key addresses the real dynamo-platform chart vendored in it.
+  dynamo-platform:
+    # Catalog CI values, not a production reference - chart defaults apply
+    # (webhook certificate managed by the operator at runtime, optional
+    # etcd/NATS/KAI Scheduler/Grove/Snapshot subcharts off since 1.4).
+    dynamo-operator:
+      enabled: true

@@ -1,0 +1,9 @@
+apiVersion: v2
+name: dynamo-platform
+description: A Helm chart that references the official "dynamo-platform" Helm chart.
+type: application
+version: 1.4.2
+dependencies:
+  - name: dynamo-platform
+    version: 1.4.2
+    repository: https://helm.ngc.nvidia.com/nvidia/ai-dynamo

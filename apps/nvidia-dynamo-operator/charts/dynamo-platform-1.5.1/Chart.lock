@@ -1,0 +1,6 @@
+dependencies:
+- name: dynamo-platform
+  repository: https://helm.ngc.nvidia.com/nvidia/ai-dynamo
+  version: 1.5.1
+digest: sha256:be8c09fc3013900ad44e86b011afd32e8ea24d77975700b6fb0b776a9d1c7b1e
+generated: "2026-10-14T22:28:26.182230255+02:00"

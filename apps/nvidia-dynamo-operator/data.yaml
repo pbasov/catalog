@@ -1,0 +1,47 @@
+title: "NVIDIA Dynamo Operator"
+tags:
+  - AI/Machine Learning
+  - Application Runtime
+created: "2026-10-14T00:00:00Z"
+github_repo: ai-dynamo/dynamo
+summary: "The NVIDIA Dynamo Operator runs distributed LLM inference on Kubernetes. It reconciles DynamoGraphDeployment resources — declarative inference graphs assembled from frontend, router, and worker components — into running services with KV-aware routing, autoscaling, and multi-node orchestration across vLLM, SGLang, and TensorRT-LLM backends."
+logo: ./assets/nvidia_logo.svg # https://commons.wikimedia.org/wiki/File:Nvidia_Logo.svg
+description: |
+    NVIDIA Dynamo is an open-source inference platform that disaggregates and schedules the
+    stages of LLM inference — prefill, decode, and KV transfer — across pools of GPU workers.
+    The Dynamo Operator brings that platform to Kubernetes: it watches DynamoGraphDeployment
+    resources and turns each declared graph into Deployments, Services, and the supporting
+    configuration, managing the full lifecycle of an inference deployment the same way any
+    other Kubernetes controller manages its workload.
+
+    A graph declares typed components (frontend, router, worker, or planner). The operator
+    wires them together, injects runtime configuration, and keeps the deployment converged
+    as specs change. Optional integrations cover NATS for request and event transport, etcd
+    for service discovery, the KAI Scheduler for GPU gang scheduling, and Grove for multi-node
+    inference orchestration. Since chart 1.4 these install as disabled-by-default subcharts,
+    so a cluster brings its own or enables the bundled ones per deployment.
+
+    The Dynamo CRDs are applied by the operator from its own image at startup, not by Helm,
+    so Helm neither upgrades nor removes them: the operator re-applies them on each start,
+    and uninstalling the chart leaves the CRDs and any DynamoGraphDeployment resources
+    behind for manual cleanup.
+
+    The operator manages inference on any supported accelerators and is typically paired
+    with the NVIDIA GPU Operator and DRA for device management. This entry wraps the upstream
+    dynamo-platform chart, which deploys the operator and admission webhooks with an
+    automatically managed webhook certificate.
+
+prerequisites: |
+  - Deploy k0rdent: [QuickStart](https://docs.k0rdent.io/latest/admin/installation/install-k0rdent/)
+  - Kubernetes v1.30 or newer (upstream chart constraint: kubeVersion >=1.30.0-0).
+
+why_in_catalog: "Serving large models at scale means composing frontends, routers, disaggregated prefill and decode workers, and KV transfer into one inference graph, then keeping that graph healthy as replicas scale up and down. The Dynamo Operator makes the whole graph a single declarative Kubernetes resource, so platform teams can roll out and update LLM inference services across managed clusters without hand-assembling the underlying Deployments and Services. Shipping it through the k0rdent catalog gives fleet-wide versioned rollout of the Dynamo runtime stack from one ServiceTemplate, with the same upgrade and rollback semantics as every other catalog app."
+doc_link: https://docs.nvidia.com/dynamo/dev/kubernetes/installation/install-dynamo
+
+# Deployment names are release-derived and the CI uses two different release names
+# ('nvidia-dynamo-operator' for the chart test, 'dynamo-platform' via the MultiClusterService),
+# so match the common part: '<release>-dynamo-operator-controller-manager-<hash>'.
+test_wait_for_pods: "dynamo-operator-controller-manager-"
+
+validated_amd64: 'y'
+validated_local: 'y'
